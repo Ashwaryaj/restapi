@@ -1,0 +1,201 @@
+﻿File system architecture:
+
+Config file-
+Will contain connection to database.
+Application global params 
+	- Default paging limit
+
+Mesages.php
+Error 400- Not found
+Error 422-Unprocessable entity
+On saving user- User is successfully created/updated.
+On deleting user- User is successfully deleted.
+
+User Modal-
+Contains following functions:
+beforeSave()
+Validations before save according to validation rules
+afterSave()  // Empty function will be used later
+beforeDelete() // Empty function will be used later
+AfterDelete() // Empty function will be used later
+beforeFind() // Empty function will be used later
+Validations before find according  to validation rules
+afterFind()
+Provide labels -
+First name= first_name
+Middle name=middle_name
+Last nam=last_name
+Email=email
+Age=age
+	Phone Number=phone_no
+	Address=address
+rules()
+		--first_name : 
+			Must be a valid string
+			maximum char-20
+			not null
+		--middle_name- 
+			Must be a valid string
+			maximum char-20
+			null=true
+		--last_name : 
+			Must be a valid string
+			maximum char-20
+			not null
+    		--phone_no-
+			Must be a valid string
+        			Maximum 15 characters
+    		--address-
+			Must be a valid string
+       			minimum characters-3
+        			maximum characters-150
+   		-- email-
+			Type=email
+        			not null
+    		--age-
+			positive integer
+        			not more than 3 digits
+        			not null
+   		-- id-
+        			Integer
+       			 Should be present in db.
+		--Limit: 
+			Positive integer
+			Not null
+		--offset
+			Positive integer
+			Not null
+
+validate()
+labels()
+save()
+    	This function is used to create/update a user.
+	Request Parameters: 
+id : integer(11)
+first_name  : String(50)
+middle_name:  String(50)
+last_name: String(50)
+address: String(250)
+age: Integer(3)
+Phone_no: String(50)
+Email: String(100)
+	Returns : User’s data 
+	Ex: array( ""data"=>( "id"=>'1' ))
+		
+ find()	
+This function fetch a single user by primary key.
+	Request Parameters: id: Integer 
+	Returns :  User’s data 
+	Ex: array("id"=>"1", "'first_name"=>"John", middle_name':=>Johny,' 	last_name'=>'Jacobs','age'=>'40' ,'address'=>'Banglore','phone_no'=>  	'9876567898');
+delete()
+    	This function deletes a user.
+	Parameters: id: Integer
+	Returns: user’s data
+	Ex: array( "status"=>“success”, "message"=> “Record deleted” 				successfully` )
+ findAll()
+    	This function lists all the users with listing and filtering.
+	Request Parameters: 
+limit  : Integer
+offset : Integer
+first_name: String (or any other filtering parameter)
+array(“limit”  =>”Integer”,”offset” =>”Integer”,”first_name”=> “Ben”)
+	Returns :  user’s information 
+	ex :- array ( "id"=>1,'first_name'=>John','middle_name'=>'Johny', 		'last_name'=>'Jacobs','age'=>1'40' ,'address'=>'Banglore','phone_no': 				=>'9876567898')
+
+UserController 
+It contains the following methods:
+
+1.“ METHOD:-”POST
+“URL:-”/user.php/?action=create
+“ACTION”-create() 
+Request Parameters: 
+		first_name  : String
+		middle_name:  String
+		last_name: String
+		address: String
+		age: Integer
+		Phone_no: Integer
+		Email: String
+Returns: Json response { "id":1,'first_name':'John','middle_name':'Johny', 'last_name':'Jacobs','age':'40' ,	'address':'Banglore','phone_no': '9876567898'} }
+Status codes:  201 (OK) [In case of user created successfully]
+			  404 (Not Found),
+			  409 (Conflict) if user already exists.
+			  422 (Unprocessable entity) [Invalid parameters]
+
+2.         “ METHOD:-”POST
+“URL:-”/user.php/?action=update
+“ACTION”-update() 
+Request Parameters: 
+		id : integer 
+		first_name  : String
+		middle_name:  String
+		last_name: String
+		address: String
+		age: Integer
+		Phone_no: Integer
+		Email: String
+Returns: Json response { "id":1 }
+	Status codes: 200 (OK) [Updated successfully]
+  204 (No Content) [User data not available to be displayed]
+ 			  404 (Not Found) [if ID not found or invalid]
+				  422 (Unprocessable entity) [Invalid parameters]
+      
+3.         “ METHOD:-”POST
+“URL:-”/user.php/?action=delete
+“ACTION”-delete() 
+Request Parameters:
+id: Integer
+Returns: Json response { "status": success }
+Status codes: 200 (OK) [Deleted successfully]
+ 404 (Not Found)[User not found in database]
+ 422 (Unprocessable entity) [Invalid id]
+
+4.         “ METHOD:-”GET
+“URL:-”/user.php/?action=index&id=1
+“ACTION”-find()
+Request Parameters: id: Integer
+Response: user’s information (JSON Format)
+Ex :- JSON { "data": { "id": 1,'first_name':'John','middle_name':'Johny', 'last_name':'Jacobs','age':'40' ,'address':'Banglore','phone_no': '9876567898'} }
+Status codes: 404 (Not Found) [Id not found in database]
+				 200 (OK) [Id found]
+				422 (Unprocessable entity) [Invalid id]
+			
+5.        “ METHOD:-”GET
+“URL:-”/user.php/?action=list&limit=5&offset=0&first_name=Ben
+“ACTION”-findAll()
+Request Parameters: 
+limit  : Integer
+offset : Integer
+first_name: String (or any other filtering parameter)
+	Response :
+	i) In case of filtering: User’s data 
+	Ex: {"id:1","first_name":Ben,"middle_name":John,"
+	last_name":Doe,"age":20,"address": Delhi,"phone_no":9900888987}
+	ii) In case of no filtering
+	All records
+	Status codes:  200(OK) [Successfully found]
+			   404(Not found)
+			   422 (Unprocessable entity) [Invalid parameters]
+
+Routes
+We create a class named routes and fetch the action parameter using GET. 
+Based on the action parameter we will call the controller method.
+
+Action=============================Controller
+create	=============================UserController-instance->create()
+update============================UserController-instance->update()
+delete=============================UserController-instance->delete()
+index==============================UserController-instance->find()
+list================================UserController-instance->findAll()
+
+Request Parser
+parser()
+	Fetch parameters from url and convert them  to Request format
+		Accepts : Url parameter
+		Returns : Request parameters i.e. controller, action, GET and POST params
+Response Parse
+encode()
+Converts Request to Json format
+Accepts :  Response parameters from controller
+	       	Returns : Json
+
