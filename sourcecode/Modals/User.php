@@ -1,73 +1,68 @@
 <?php
 class User
 {
-
     public function beforeSave()
     {
-        # code...
+        return true;
     }
 
     public function afterSave()
     {
-        # code...
+        return true;
     }
 
     public function beforeDelete()
     {
-        # code...
+        return true;
     }
 
     public function afterDelete()
     {
-        # code...
+        return true;
     }
 
     public function beforeFind()
     {
-        # code...
+        return true;
     }
 
     public function afterFind()
     {
-        # code...
+        return true;
     }
 
     public function rules()
     {
-        # code...
+        return true;
     }
 
     public function validate()
     {
-        # code...
+        return true;
     }
 
     public function labels()
     {
-        # code...
+        return true;
     }
 
-    public function save($array())
+    public function save()
     {
-        # code...\
-        //return array();
+        return array();
     }
 
     public function find($id)
     {
-        # code...
-        //return array();
+        return array();
     }
 
     public function delete($id)
     {
-        # code...
-        //return array();
+        return array();
     }
 
     public function findAll($limit, $offset, $firstName)
     {
-        # code...
-        //return array();
+        return array();
     }
 }
