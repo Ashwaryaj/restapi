@@ -53,7 +53,7 @@ class User
 
     public function find($id)
     {
-        return array();
+        return array('id'=>$id);
     }
 
     public function delete($id)
