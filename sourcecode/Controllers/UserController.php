@@ -3,11 +3,14 @@
   {
     public function create()
     {
+        echo "string";
+        die();
         //return mixed
     }
 
     public function update()
     {
+        echo "str";
         //return mixed
     }
     public function delete($id)

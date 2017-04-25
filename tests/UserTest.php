@@ -14,113 +14,128 @@ class UserTest extends TestCase
     }
     public function testFind()
     {
-        $this->assertNotEmpty($this->user->find(4));
+        $id=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $this->assertNotEmpty($this->user->find($id));
     }
     public function testFindByIdZero()
     {
-        $this->assertFalse($this->user->find(0));
+        $this->assertEmpty($this->user->find(0));
     }
+
     public function testFindByIdNegative()
     {
-        $this->assertFalse($this->user->find(-1));
+        $this->assertEmpty($this->user->find(-1));
     }
-    public function testFindByIdPositive()
-    {
-        $this->assertNotEmpty($this->user->find(4));
-    }
+
     public function testFindByIdNotNumber()
     {
-        $this->assertFalse($this->user->find('@'));
+        $this->assertEmpty($this->user->find('@'));
     }
+
+    public function testFindByIdPositive()
+    {
+        $id=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $this->assertNotEmpty($this->user->find($id));
+    }
+
     public function testFindByIdNotExists()
     {
         $this->user->deleteAll();
-        $this->assertFalse($this->user->find(1));
+        $this->assertEmpty($this->user->find(1));
     }
+
     public function testFindByIdExists()
     {
         $this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
-        $id=// id of the saved user
+        $id= $this->user->getLastId();
         $this->assertNotEmpty($this->user->find($id));
     }
-    public function testDeleteById()
+
+    public function testDeleteByIdPositive()
     {
-        $this->assertFalse($this->user->delete(0));
+        $message=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $this->assertNull($this->user->delete($this->user->getLastId()));
     }
     public function testDeleteByIdNegative()
     {
         $this->assertFalse($this->user->delete(-1));
     }
-    public function testDeleteByIdPositive()
-    {
-        $this->assertNotEmpty($this->user->delete(4));
-    }
     public function testDeleteByIdNotNumber()
     {
         $this->assertFalse($this->user->delete('@'));
     }
+
     public function testDeleteByIdNotExists()
     {
         $this->user->deleteAll();
         $this->assertFalse($this->user->delete(7));
     }
+
     public function testDeleteByIdExists()
     {
-        $this->user->save(['id'=>6, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
-        $id=// id of the saved user
+        $this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $id=$this->user->getLastId();
         $this->assertNotEmpty($this->user->find($id));
     }
+
     public function testFindAll()
     {
         $this->assertNotEmpty($this->user->findAll(4, 4, 'Ben'));
     }
+
     public function testFindAllByOffset()
     {
-        $this->assertNotEmpty($this->user->findAll([], 5));
+        $this->assertTrue($this->user->findAll([], 5));
     }
     public function testFindAllByFilter()
     {
-        $this->assertNotEmpty($this->user->findAll());
+        $this->assertTrue($this->user->findAll());
     }
     public function testSave()
     {
-        $userDetails=array();
-        $userDetails=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
-        $this->assertNotEmpty($userDetails);
+        $id=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $this->assertNotEmpty($id);
     }
     public function testUpdate()
     {
-        $this->assertNotEmpty($this->user->save(['id'=>1,'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
-    }
-    public function testSaveWithRequiredValidation()
-    {
-        $this->assertNotEmpty($this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
-    }
-    public function testSaveWithEmailValidation()
-    {
-        $this->assertNotEmpty($this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
-    }
-    public function testUpdateWithExistId()
-    {
-        $this->assertNotEmpty($this->user->save(['id'=>6, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
-    }
-    public function testUpdateWithIdZero()
-    {
-        $this->assertEmpty($this->user->save(['id'=>0, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+        $this->assertTrue($this->user->save(['id'=>1,'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Pune', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
     }
     public function testUpdateWithNegativeId()
     {
-        $this->assertEmpty($this->user->save(['id'=>-1, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+        $this->assertFalse($this->user->save(['id'=>-1, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
     }
     public function testUpdateWithInvalidId()
     {
-        $this->assertEmpty($this->user->save(['id'=>'@', 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+        $this->assertFalse($this->user->save(['id'=>'@', 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
     }
     public function testUpdateWithNotExistId()
     {
         $this->user->deleteAll();
         $this->assertEmpty($this->user->save(['id'=>6, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
     }
+    public function testUpdateWithExistId()
+    {
+        $this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $id=$this->user->getLastId();
+        $this->assertTrue($this->user->save(['id'=>$id,'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Pune', 'age'=>21, 'phoneNumber'=>"9087054321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+    }
+    public function testUpdateWithIdZero()
+    {
+        $this->assertFalse($this->user->save(['id'=>0, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+    }
+
+    public function testSaveWithRequiredValidation()
+    {
+         $this->assertTrue($this->user->validate(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+        $id=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $this->userassertGreaterThan($id, 0);
+    }
+    public function testSaveWithEmailValidation()
+    {
+        $this->assertNotEmpty($this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+    }
+
+
     public function testUpdateWithRequiredValidation()
     {
         $this->assertNotEmpty($this->user->save(['id'=>6, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
@@ -165,17 +180,19 @@ class UserTest extends TestCase
     {
         $this->assertTrue($this->user->labels());
     }
+
     public function testFindAllByOffsetNegative()
     {
         $this->assertFalse($this->user->findAll(5, -5, 'Ben'));
     }
+
     public function testFindAllByOffsetFloat()
     {
-        $this->assertFalse($this->user->findAll(5, 5.0, 'Ben'));
+        $this->assertNull($this->user->findAll(5, 5.0, 'Ben'));
     }
     public function testFindAllByOffsetNotExists()
     {
-        $this->assertFalse($this->user->findAll(5, '@', 'Ben'));
+        $this->assertFalse($this->user->findAll(5, '*', 'Ben'));
     }
     public function testFindAllByLimitNegative()
     {
@@ -183,7 +200,7 @@ class UserTest extends TestCase
     }
     public function testFindAllByLimitFloat()
     {
-        $this->assertFalse($this->user->findAll(5.0, 5, 'Ben'));
+        $this->assertNull($this->user->findAll(5.0, 5, 'Ben'));
     }
     public function testFindAllByLimitInvalid()
     {
@@ -191,7 +208,7 @@ class UserTest extends TestCase
     }
     public function testFindAllByFilterInvalid()
     {
-        $this->assertFalse($this->user->findAll(5, 5, 98));
+        $this->assertNull($this->user->findAll(5, 5, 98));
     }
     public function testFindAllByFirstNameLengthExceeds()
     {
