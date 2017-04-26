@@ -8,6 +8,7 @@ class User
 
     protected $rules = [
         'required' => ['first_name', 'last_name', 'email', 'age', 'address', 'phone_no'],
+        'validEmail' => ['email']
     ];
 
     public function __construct()
@@ -76,6 +77,11 @@ class User
     public function required($field, $data)
     {
         return (isset($data[$field]) && !empty($data[$field]));
+    }
+
+    public function validEmail($field, $data)
+    {
+        return (isset($data[$field]) && !empty($data[$field]) && filter_var($data[$field], FILTER_VALIDATE_EMAIL));
     }
 
     public function labels()
