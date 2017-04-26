@@ -7,8 +7,10 @@ class User
     private $sql;
 
     protected $rules = [
-        'required' => ['first_name', 'last_name', 'email', 'age', 'address', 'phone_no'],
-        'validEmail' => ['email']
+        'required' => ['first_name', 'last_name', 'email', 'age', 'address', 'phone_no', 'id'],
+        'validEmail' => ['email'],
+        'alphanumeric' => ['address'],
+        'alphabetic' => ['firstName', 'middleName', 'lastName'],
     ];
 
     public function __construct()
@@ -81,7 +83,17 @@ class User
 
     public function validEmail($field, $data)
     {
-        return (isset($data[$field]) && !empty($data[$field]) && filter_var($data[$field], FILTER_VALIDATE_EMAIL));
+        return (filter_var($data[$field], FILTER_VALIDATE_EMAIL));
+    }
+
+    public function alphabetic($field, $data)
+    {
+        return ctype_alpha($data[$field]);
+    }
+
+    public function alphanumeric($field, $data)
+    {
+        return ctype_alnum($data[$field]);
     }
 
     public function labels()
