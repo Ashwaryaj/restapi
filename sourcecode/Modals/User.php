@@ -12,7 +12,13 @@ class User
         'alphanumeric' => ['address'],
         'alphabetic' => ['firstName', 'middleName', 'lastName'],
         'lengthCheck' => [
-            'firstName' => [
+            [
+                'firstName' => [
+                    'min' => 0,
+                    'max' => 20,
+                ],
+            ],
+            /*'middleName' => [
                 'min' => 1,
                 'max' => 20,
             ],
@@ -35,7 +41,7 @@ class User
             'phoneNumber'  => [
                 'min' => 5,
                 'max' => 15,
-            ]
+            ]*/
         ]
     ];
 
@@ -99,6 +105,9 @@ class User
             }
         }
 
+        print_r($errors);
+        die;
+
         return (boolean)count($errors);
     }
 
@@ -109,7 +118,9 @@ class User
 
     public function validEmail($field, $data)
     {
-        return (!filter_var($data[$field], FILTER_VALIDATE_EMAIL)===true);
+        $email = $data[$field];
+        $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
+        return (preg_match($regex, $email))?true:false;
     }
 
     public function alphabetic($field, $data)
@@ -124,7 +135,13 @@ class User
 
     public function lengthCheck($field, $data)
     {
-        return (strlen($data[$field])>=$this->rules['lengthCheck'][$field]['min'] );
+        $inputKey = (array_keys($field))[0];
+
+        if (isset($data[$inputKey])) {
+            return (strlen($data[$inputKey]) >= $field[$inputKey]['min']);
+        }
+
+        return true;
     }
 
     public function labels()
