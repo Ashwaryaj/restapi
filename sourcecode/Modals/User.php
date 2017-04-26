@@ -7,10 +7,36 @@ class User
     private $sql;
 
     protected $rules = [
-        'required' => ['first_name', 'last_name', 'email', 'age', 'address', 'phone_no', 'id'],
+        'required' => ['firstName', 'lastName', 'email', 'age', 'address', 'phoneNumber'],
         'validEmail' => ['email'],
         'alphanumeric' => ['address'],
         'alphabetic' => ['firstName', 'middleName', 'lastName'],
+        'lengthCheck' => [
+            'firstName' => [
+                'min' => 1,
+                'max' => 20,
+            ],
+            'lastName'  => [
+                'min' => 1,
+                'max' => 20,
+            ],
+            'email'  => [
+                'min' => 5,
+                'max' => 50,
+            ],
+            'age'  => [
+                'min' => 1,
+                'max' => 3,
+            ],
+            'address'   => [
+                'min' => 4,
+                'max' => 200,
+            ],
+            'phoneNumber'  => [
+                'min' => 5,
+                'max' => 15,
+            ]
+        ]
     ];
 
     public function __construct()
@@ -83,7 +109,7 @@ class User
 
     public function validEmail($field, $data)
     {
-        return (filter_var($data[$field], FILTER_VALIDATE_EMAIL));
+        return (!filter_var($data[$field], FILTER_VALIDATE_EMAIL)===true);
     }
 
     public function alphabetic($field, $data)
@@ -94,6 +120,11 @@ class User
     public function alphanumeric($field, $data)
     {
         return ctype_alnum($data[$field]);
+    }
+
+    public function lengthCheck($field, $data)
+    {
+        return (strlen($data[$field])>=$this->rules['lengthCheck'][$field]['min'] );
     }
 
     public function labels()

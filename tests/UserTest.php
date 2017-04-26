@@ -76,7 +76,7 @@ class UserTest extends TestCase
     }
     public function testFindAllByOffset()
     {
-        $this->assertNotEmpty($this->user->findAll([], 5));
+        $this->assertNotEmpty($this->user->findAll(0, 0));
     }
     public function testFindAllByFilter()
     {
@@ -120,6 +120,14 @@ class UserTest extends TestCase
         $id=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
         $this->assertNotEmpty($id);
     }
+
+    public function testSaveWithLengthValidation()
+    {
+        $this->assertTrue($this->user->validate(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+        $id=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $this->assertNotEmpty($id);
+    }
+
     public function testSaveWithEmailValidation()
     {
         $this->assertTrue($this->user->validate(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
@@ -141,6 +149,13 @@ class UserTest extends TestCase
         $this->assertNotEmpty($id);
     }
     public function testUpdateWithEmailValidation()
+    {
+        $this->assertTrue($this->user->validate(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+        $id=$this->user->save(['id'=>1, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $this->assertNotEmpty($id);
+    }
+
+    public function testUpdateWithLengthValidation()
     {
         $this->assertTrue($this->user->validate(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
         $id=$this->user->save(['id'=>1, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
@@ -177,14 +192,6 @@ class UserTest extends TestCase
     public function testAfterFind()
     {
         $this->assertTrue($this->user->afterFind());
-    }
-    public function testRules()
-    {
-        $this->assertTrue($this->user->rules());
-    }
-    public function testValidate()
-    {
-        $this->assertTrue($this->user->validate());
     }
     public function testLabels()
     {
