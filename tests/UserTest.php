@@ -21,36 +21,30 @@ class UserTest extends TestCase
     {
         $this->assertEmpty($this->user->find(0));
     }
-
     public function testFindByIdNegative()
     {
         $this->assertEmpty($this->user->find(-1));
     }
-
     public function testFindByIdNotNumber()
     {
         $this->assertEmpty($this->user->find('@'));
     }
-
     public function testFindByIdPositive()
     {
         $id=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
         $this->assertNotEmpty($this->user->find($id));
     }
-
     public function testFindByIdNotExists()
     {
         $this->user->deleteAll();
         $this->assertEmpty($this->user->find(1));
     }
-
     public function testFindByIdExists()
     {
         $this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
         $id= $this->user->getLastId();
         $this->assertNotEmpty($this->user->find($id));
     }
-
     public function testDeleteByIdPositive()
     {
         $message=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
@@ -64,32 +58,29 @@ class UserTest extends TestCase
     {
         $this->assertFalse($this->user->delete('@'));
     }
-
     public function testDeleteByIdNotExists()
     {
         $this->user->deleteAll();
         $this->assertFalse($this->user->delete(7));
     }
-
     public function testDeleteByIdExists()
     {
         $this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
         $id=$this->user->getLastId();
         $this->assertNotEmpty($this->user->find($id));
     }
-
     public function testFindAll()
     {
-        $this->assertNotEmpty($this->user->findAll(4, 4, 'Ben'));
+        $this->user->save(['firstName'=>'asd', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
+        $this->assertNotEmpty($this->user->findAll(4, 0, 'asd'));
     }
-
     public function testFindAllByOffset()
     {
-        $this->assertTrue($this->user->findAll([], 5));
+        $this->assertNotEmpty($this->user->findAll([], 5));
     }
     public function testFindAllByFilter()
     {
-        $this->assertTrue($this->user->findAll());
+        $this->assertNotEmpty($this->user->findAll());
     }
     public function testSave()
     {
@@ -123,10 +114,9 @@ class UserTest extends TestCase
     {
         $this->assertFalse($this->user->save(['id'=>0, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
     }
-
     public function testSaveWithRequiredValidation()
     {
-         $this->assertTrue($this->user->validate(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
+        $this->assertTrue($this->user->validate(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
         $id=$this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]);
         $this->userassertGreaterThan($id, 0);
     }
@@ -134,8 +124,6 @@ class UserTest extends TestCase
     {
         $this->assertNotEmpty($this->user->save(['firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
     }
-
-
     public function testUpdateWithRequiredValidation()
     {
         $this->assertNotEmpty($this->user->save(['id'=>6, 'firstName'=>'Ben', 'middleName'=>'Ten', 'lastName'=>'Don', 'address'=>'Delhi', 'age'=>21, 'phoneNumber'=>"9087654321", 'email'=>"ashwaryajethi@yahoo.co.in"]));
@@ -180,15 +168,13 @@ class UserTest extends TestCase
     {
         $this->assertTrue($this->user->labels());
     }
-
     public function testFindAllByOffsetNegative()
     {
         $this->assertFalse($this->user->findAll(5, -5, 'Ben'));
     }
-
     public function testFindAllByOffsetFloat()
     {
-        $this->assertNull($this->user->findAll(5, 5.0, 'Ben'));
+        $this->assertFalse($this->user->findAll(5, 5.0, 'Ben'));
     }
     public function testFindAllByOffsetNotExists()
     {
@@ -200,7 +186,7 @@ class UserTest extends TestCase
     }
     public function testFindAllByLimitFloat()
     {
-        $this->assertNull($this->user->findAll(5.0, 5, 'Ben'));
+        $this->assertFalse($this->user->findAll(5.0, 5, 'Ben'));
     }
     public function testFindAllByLimitInvalid()
     {
@@ -208,7 +194,7 @@ class UserTest extends TestCase
     }
     public function testFindAllByFilterInvalid()
     {
-        $this->assertNull($this->user->findAll(5, 5, 98));
+        $this->assertFalse($this->user->findAll(5, 5, 98));
     }
     public function testFindAllByFirstNameLengthExceeds()
     {

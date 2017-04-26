@@ -1,14 +1,13 @@
 <?php
 require '../restapi/sourcecode/config.php';
 
-
 class User
 {
     private $conn;
     private $sql;
 
     protected $rules = [
-        'required' => ['first_name', 'last_name', 'email', 'age'],
+        'required' => ['first_name', 'last_name', 'email', 'age', 'address', 'phone_no'],
     ];
 
     public function __construct()
@@ -24,11 +23,9 @@ class User
                 $username,
                 $password
             );
-            // set the PDO error mode to exception
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            echo "Could not connect to database";
-            die();
+            return $e->getMessage();
         }
     }
     public function beforeSave()
@@ -61,11 +58,6 @@ class User
         return true;
     }
 
-    public function rules()
-    {
-        return true;
-    }
-
     public function validate($userDetails = array())
     {
         $errors = [];
@@ -93,7 +85,6 @@ class User
 
     public function save($userDetails = array())
     {
-
         try {
             if (!array_key_exists('id', $userDetails)) {
                 $sql = $this->conn->prepare("INSERT INTO users (first_name, middle_name, last_name, email, age, phone_no, address)
@@ -153,21 +144,20 @@ class User
         }
     }
 
-    public function findAll($limit = 10, $offset = null, $firstName = null)
+    public function findAll($limit = 10, $offset = 0, $firstName = 'Ben')
     {
         try {
             if ($limit <= 0) {
-                $limit = 0;
+                $limit = 10;
             }
-
-            $sql=$this->conn->prepare("select * from users where first_name=:firstName LIMIT :limit OFFSET :offset");
+            $sql=$this->conn->prepare("SELECT * from users WHERE first_name=:firstName LIMIT :offset , :lmt");
             $sql->bindParam(':firstName', $firstName);
-            $sql->bindValue(':limit',  (int)$limit, PDO::PARAM_INT);
-            $sql->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+            $sql->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $sql->bindValue(':lmt', $limit, PDO::PARAM_INT);
             $sql->execute();
             return $sql->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            return $e->getMessage();
+            return false;
         }
     }
 
