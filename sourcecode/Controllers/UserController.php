@@ -1,38 +1,37 @@
 <?php
-  class UserController
-  {
+ini_set("display_errors", "1");
+error_reporting(E_ALL);
+
+require __DIR__ . '/../Modals/User.php';
+
+class UserController
+{
+    static $model;
+
+    public function __construct()
+    {
+        self::$model = new User();
+    }
+
     public function create()
     {
-        echo "string";
-        die();
-        //return mixed
+        return self::$model->save($_POST);
     }
 
     public function update()
     {
-        echo "str";
-        //return mixed
+        return self::$model->save($_POST);
     }
-    public function delete($id)
+    public function delete()
     {
-        //return mixed
+        return self::$model->delete($_POST['id']);
     }
-    public function find($id)
+    public function find($action, $id)
     {
-        //return mixed
+        return self::$model->find($_POST);
     }
-    public function findAll($limit, $offset, $firstName)
+    public function findAll($action, $limit, $offset, $firstName)
     {
-        //return mixed
+        return self::$model->findAll($limit, $offset, $firstName);
     }
-
-    public function list()
-    {
-        return ['testing'];
-    }
-
-    public function listing($action, $filter)
-    {
-        return ['action' => $action, 'filter' => $filter];
-    }
-  }
+}

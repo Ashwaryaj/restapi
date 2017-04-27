@@ -1,5 +1,5 @@
 <?php
-require '../restapi/sourcecode/config.php';
+require __DIR__ . '/../config.php';
 
 class User
 {
@@ -106,7 +106,7 @@ class User
         }
 
         print_r($errors);
-        die;
+
 
         return (boolean)count($errors);
     }
@@ -155,11 +155,26 @@ class User
             if (!array_key_exists('id', $userDetails)) {
                 $sql = $this->conn->prepare("INSERT INTO users (first_name, middle_name, last_name, email, age, phone_no, address)
                 VALUES (:firstName, :middleName, :lastName, :email, :age, :phoneNumber, :address)");
-                $sql->execute($userDetails);
+                $sql->bindParam(':firstName',$userDetails['firstName']);
+                $sql->bindParam(':middleName',$userDetails['middleName']);
+                $sql->bindParam(':lastName',$userDetails['lastName']);
+                $sql->bindParam('email',$userDetails['email']);
+                $sql->bindParam(':age',$userDetails['age']);
+                $sql->bindParam('phoneNumber',$userDetails['phoneNumber']);
+                $sql->bindParam('address',$userDetails['address']);
+                $sql->execute();
                 return $this->conn->lastInsertId();
             } else {
                 $sql= $this->conn->prepare("update users set first_name=:firstName, middle_name=:middleName, last_name=:lastName, email=:email, age=:age, phone_no=:phoneNumber, address=:address where id=:id");
-                $sql->execute($userDetails);
+                $sql->bindParam(':id', $userDetails['id']);
+                $sql->bindParam(':firstName',$userDetails['firstName']);
+                $sql->bindParam(':middleName',$userDetails['middleName']);
+                $sql->bindParam(':lastName',$userDetails['lastName']);
+                $sql->bindParam('email',$userDetails['email']);
+                $sql->bindParam(':age',$userDetails['age']);
+                $sql->bindParam('phoneNumber',$userDetails['phoneNumber']);
+                $sql->bindParam('address',$userDetails['address']);
+                $sql->execute();
                 $count= $sql->rowCount();
                 if (0==$count) {
                     return false;
@@ -168,18 +183,18 @@ class User
                 }
             }
         } catch (PDOException $e) {
-            return false;
+            return $e->getMessage();
         }
     }
 
     public function find($id)
     {
         try {
-            $sql=$this->conn->prepare("select id from users where id=:id");
+            $sql=$this->conn->prepare("select * from users where id=:id");
             $sql->bindParam(':id', $id);
             $sql->execute();
             $result = $sql->fetch(PDO::FETCH_ASSOC);
-            return $result['id'];
+            return $result;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
@@ -201,10 +216,11 @@ class User
             $sql->bindParam(':id', $id);
             $sql->execute();
             $count= $sql->rowCount();
+
             if (0==$count) {
                 return false;
             }
-            //return true;
+            return true;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
@@ -213,15 +229,17 @@ class User
     public function findAll($limit = 10, $offset = 0, $firstName = 'Ben')
     {
         try {
-            if ($limit <= 0) {
+            if ($limit <=0) {
                 $limit = 10;
             }
-            $sql=$this->conn->prepare("SELECT * from users WHERE first_name=:firstName LIMIT :offset , :lmt");
+            $sql=$this->conn->prepare("SELECT * from users WHERE first_name=:firstName LIMIT  :offset, :lmt");
             $sql->bindParam(':firstName', $firstName);
-            $sql->bindValue(':offset', $offset, PDO::PARAM_INT);
-            $sql->bindValue(':lmt', $limit, PDO::PARAM_INT);
+            $sql->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+            $sql->bindValue(':lmt', (int) $limit, PDO::PARAM_INT);
             $sql->execute();
-            return $sql->fetch(PDO::FETCH_ASSOC);
+            return var_dump($sql->fetchAll(PDO::FETCH_ASSOC)) ;
+
+
         } catch (PDOException $e) {
             return false;
         }

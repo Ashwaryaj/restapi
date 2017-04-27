@@ -13,7 +13,8 @@ if (isset($_GET['action'])) {
             $data = new $controller();
 
             if (method_exists($controller, $action)) {
-                $response = call_user_func_array([$controller, $action], $_REQUEST);
+                $_POST = (array)json_decode(file_get_contents('php://input'));
+                $response = @call_user_func_array([$controller, $action], $_REQUEST);
                 echo json_encode($response);
                 die;
             } else {
