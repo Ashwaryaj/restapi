@@ -1,10 +1,30 @@
 <?php
 if (isset($_GET['action'])) {
-    $action=$_GET['action'];
-}
-switch ($action) {
-    case 'create':
-        $user=new User;
-        $user->save();
-        break;
+    $request = explode('/', $_GET['action']);
+
+    $action = $request[1];
+
+    $controller = str_replace(' ', '', ucwords(str_replace('-', ' ', $request[0]))) . 'Controller';
+
+    if (file_exists(__DIR__ . '/Controllers/' . $controller . '.php')) {
+        require(__DIR__ . '/Controllers/' . $controller . '.php');
+
+        if (class_exists($controller)) {
+            $data = new $controller();
+
+            if (method_exists($controller, $action)) {
+                $response = call_user_func_array([$controller, $action], $_REQUEST);
+                echo json_encode($response);
+                die;
+            } else {
+                echo 'Action not found';
+            }
+        } else {
+            echo 'Controller class not found';
+        }
+    } else {
+        echo 'Controller file not found';
+    }
+} else {
+    echo "Kindly specify the action";
 }

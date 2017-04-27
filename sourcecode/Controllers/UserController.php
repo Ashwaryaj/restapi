@@ -25,6 +25,14 @@
     {
         //return mixed
     }
+
+    public function list()
+    {
+        return ['testing'];
+    }
+
+    public function listing($action, $filter)
+    {
+        return ['action' => $action, 'filter' => $filter];
+    }
   }
-
-
