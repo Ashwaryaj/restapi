@@ -34,7 +34,7 @@ class User
                     'max' => 20,
                 ],
             ],
-            /*'middleName' => [
+            'middleName' => [
                 'min' => 1,
                 'max' => 20,
             ],
@@ -57,7 +57,7 @@ class User
             'phoneNumber'  => [
                 'min' => 5,
                 'max' => 15,
-            ]*/
+            ]
         ]
     ];
     /**
@@ -152,10 +152,6 @@ class User
                 }
             }
         }
-
-        print_r($errors);
-
-
         return (boolean)count($errors);
     }
     /**
@@ -265,6 +261,7 @@ class User
                 $sql->bindParam('address', $userDetails['address']);
                 $sql->execute();
                 $count= $sql->rowCount();
+
                 if (0==$count) {
                     return false;
                 } else {
@@ -272,7 +269,7 @@ class User
                 }
             }
         } catch (PDOException $e) {
-            return $e->getMessage();
+            return  $e->getMessage();
         }
     }
     /**
@@ -333,13 +330,10 @@ class User
     public function findAll($limit = 10, $offset = 0, $firstName = 'Ben')
     {
         try {
-            if ($limit <=0) {
-                $limit = 10;
-            }
             $sql=$this->conn->prepare("SELECT * from users WHERE first_name=:firstName LIMIT  :offset, :lmt");
             $sql->bindParam(':firstName', $firstName);
-            $sql->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-            $sql->bindValue(':lmt', (int) $limit, PDO::PARAM_INT);
+            $sql->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $sql->bindValue(':lmt', $limit, PDO::PARAM_INT);
             $sql->execute();
             $result=$sql->fetchAll(PDO::FETCH_ASSOC);
             return $result;
