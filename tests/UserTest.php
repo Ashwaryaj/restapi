@@ -1,5 +1,9 @@
 <?php
 use PHPUnit\Framework\TestCase;
+
+/**
+ * This is unit testing of User modal.
+ */
 class UserTest extends TestCase
 {
     private $user;
@@ -191,11 +195,11 @@ class UserTest extends TestCase
     }
     public function testFindAllByOffsetNegative()
     {
-        $this->assertFalse($this->user->findAll(5, -5, 'Ben'));
+        $this->assertFalse($this->user->findAll(5, -1, 'Ben'));
     }
     public function testFindAllByOffsetFloat()
     {
-        $this->assertFalse($this->user->findAll(5, 5.0, 'Ben'));
+        $this->assertFalse($this->user->findAll(5, 0.0, 'Ben'));
     }
     public function testFindAllByOffsetNotExists()
     {
@@ -203,19 +207,19 @@ class UserTest extends TestCase
     }
     public function testFindAllByLimitNegative()
     {
-        $this->assertFalse($this->user->findAll(-5, 5, 'Ben'));
+        $this->assertFalse($this->user->findAll(-5, 0, 'Ben'));
     }
     public function testFindAllByLimitFloat()
     {
-        $this->assertFalse($this->user->findAll(5.0, 5, 'Ben'));
+        $this->assertFalse($this->user->findAll(5.0, 0, 'Ben'));
     }
     public function testFindAllByLimitInvalid()
     {
-        $this->assertFalse($this->user->findAll('!', 5, 'Ben'));
+        $this->assertFalse($this->user->findAll('!', 0, 'Ben'));
     }
     public function testFindAllByFilterInvalid()
     {
-        $this->assertFalse($this->user->findAll(5, 5, 98));
+        $this->assertFalse($this->user->findAll(5, 0, 98));
     }
     public function testFindAllByFirstNameLengthExceeds()
     {

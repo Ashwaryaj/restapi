@@ -1,11 +1,27 @@
 <?php
 require __DIR__ . '/../config.php';
-
+/**
+ * User Modal class
+ */
 class User
 {
+    /**
+     * Connection object for database connection
+     *
+     * @var private
+     */
     private $conn;
+    /**
+     * Sql object for sql commands
+     *
+     * @var private
+     */
     private $sql;
-
+    /**
+     * Rules for validation
+     *
+     * @var protected
+     */
     protected $rules = [
         'required' => ['firstName', 'lastName', 'email', 'age', 'address', 'phoneNumber'],
         'validEmail' => ['email'],
@@ -44,7 +60,9 @@ class User
             ]*/
         ]
     ];
-
+    /**
+     * Modal constructor. Provides db connection
+     */
     public function __construct()
     {
         $servername = DB_HOST;
@@ -63,36 +81,66 @@ class User
             return $e->getMessage();
         }
     }
+    /**
+     * Performs actions before executing Save method
+     *
+     * @return boolean Boolean true
+     */
     public function beforeSave()
     {
         return true;
     }
-
+    /**
+     * Performs actions after executing Save method
+     *
+     * @return boolean Boolean true
+     */
     public function afterSave()
     {
         return true;
     }
-
+    /**
+     * Performs actions before executing Delete method
+     *
+     * @return boolean Boolean true
+     */
     public function beforeDelete()
     {
         return true;
     }
-
+    /**
+     * Performs actions after executing Delete method
+     *
+     * @return boolean Boolean true
+     */
     public function afterDelete()
     {
         return true;
     }
-
+    /**
+     * Performs actions before executing Find method
+     *
+     * @return boolean Boolean true
+     */
     public function beforeFind()
     {
         return true;
     }
-
+    /**
+     * Performs actions after executing Find method
+     *
+     * @return boolean Boolean true
+     */
     public function afterFind()
     {
         return true;
     }
-
+    /**
+     * Provides validation for user
+     *
+     * @param  array $userDetails Contains all user details like first name,last name, age etc
+     * @return boolean              Errors count
+     */
     public function validate($userDetails = array())
     {
         $errors = [];
@@ -110,29 +158,59 @@ class User
 
         return (boolean)count($errors);
     }
-
+    /**
+     * For required validation
+     *
+     * @param  mixed $field It can be any field related to user
+     * @param  array $data  User details
+     * @return boolean        If field has a value then true otherwise false
+     */
     public function required($field, $data)
     {
         return (isset($data[$field]) && !empty($data[$field]));
     }
-
+    /**
+     * For email validation
+     *
+     * @param  mixed $field It can be any field related to user
+     * @param  array $data  User details
+     * @return boolean        If email is validated then true otherwise false
+     */
     public function validEmail($field, $data)
     {
         $email = $data[$field];
         $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
         return (preg_match($regex, $email))?true:false;
     }
-
+    /**
+     * Check whether field is alphabetic
+     *
+     * @param  mixed $field It can be any field related to user
+     * @param  array $data  User details
+     * @return boolean       true If field is alphabetic else false
+     */
     public function alphabetic($field, $data)
     {
         return ctype_alpha($data[$field]);
     }
-
+    /**
+     * Check whether field is alphanumeric
+     *
+     * @param  mixed $field It can be any field related to user
+     * @param  array $data  User details
+     * @return boolean       true If field is alphanumeric else false
+     */
     public function alphanumeric($field, $data)
     {
         return ctype_alnum($data[$field]);
     }
-
+    /**
+     * Check whether field is of specified length
+     *
+     * @param  mixed $field It can be any field related to user
+     * @param  array $data  User details
+     * @return boolean       true If field is of specified length else false
+     */
     public function lengthCheck($field, $data)
     {
         $inputKey = (array_keys($field))[0];
@@ -143,37 +221,48 @@ class User
 
         return true;
     }
-
+    /**
+     * Provides labels for application
+     *
+     * @return boolean true
+     */
     public function labels()
     {
         return true;
     }
-
+    /**
+     * Creates/Updates a user
+     *
+     * @param  array $userDetails Fields  related to user
+     * @return mixed             Boolean or error message
+     */
     public function save($userDetails = array())
     {
         try {
             if (!array_key_exists('id', $userDetails)) {
-                $sql = $this->conn->prepare("INSERT INTO users (first_name, middle_name, last_name, email, age, phone_no, address)
-                VALUES (:firstName, :middleName, :lastName, :email, :age, :phoneNumber, :address)");
-                $sql->bindParam(':firstName',$userDetails['firstName']);
-                $sql->bindParam(':middleName',$userDetails['middleName']);
-                $sql->bindParam(':lastName',$userDetails['lastName']);
-                $sql->bindParam('email',$userDetails['email']);
-                $sql->bindParam(':age',$userDetails['age']);
-                $sql->bindParam('phoneNumber',$userDetails['phoneNumber']);
-                $sql->bindParam('address',$userDetails['address']);
+                $sql = $this->conn->prepare(
+                    "INSERT INTO users (first_name, middle_name, last_name, email, age, phone_no, address)
+                VALUES (:firstName, :middleName, :lastName, :email, :age, :phoneNumber, :address)"
+                );
+                $sql->bindParam(':firstName', $userDetails['firstName']);
+                $sql->bindParam(':middleName', $userDetails['middleName']);
+                $sql->bindParam(':lastName', $userDetails['lastName']);
+                $sql->bindParam('email', $userDetails['email']);
+                $sql->bindParam(':age', $userDetails['age']);
+                $sql->bindParam('phoneNumber', $userDetails['phoneNumber']);
+                $sql->bindParam('address', $userDetails['address']);
                 $sql->execute();
                 return $this->conn->lastInsertId();
             } else {
                 $sql= $this->conn->prepare("update users set first_name=:firstName, middle_name=:middleName, last_name=:lastName, email=:email, age=:age, phone_no=:phoneNumber, address=:address where id=:id");
                 $sql->bindParam(':id', $userDetails['id']);
-                $sql->bindParam(':firstName',$userDetails['firstName']);
-                $sql->bindParam(':middleName',$userDetails['middleName']);
-                $sql->bindParam(':lastName',$userDetails['lastName']);
-                $sql->bindParam('email',$userDetails['email']);
-                $sql->bindParam(':age',$userDetails['age']);
-                $sql->bindParam('phoneNumber',$userDetails['phoneNumber']);
-                $sql->bindParam('address',$userDetails['address']);
+                $sql->bindParam(':firstName', $userDetails['firstName']);
+                $sql->bindParam(':middleName', $userDetails['middleName']);
+                $sql->bindParam(':lastName', $userDetails['lastName']);
+                $sql->bindParam('email', $userDetails['email']);
+                $sql->bindParam(':age', $userDetails['age']);
+                $sql->bindParam('phoneNumber', $userDetails['phoneNumber']);
+                $sql->bindParam('address', $userDetails['address']);
                 $sql->execute();
                 $count= $sql->rowCount();
                 if (0==$count) {
@@ -186,7 +275,12 @@ class User
             return $e->getMessage();
         }
     }
-
+    /**
+     * Method for finding a user
+     *
+     * @param  Integer $id id of user
+     * @return mixed     Boolean or String based on records fetched or error
+     */
     public function find($id)
     {
         try {
@@ -199,6 +293,11 @@ class User
             return $e->getMessage();
         }
     }
+    /**
+     * Deletes all user
+     *
+     * @return String PDO error message
+     */
     public function deleteAll()
     {
         try {
@@ -208,7 +307,12 @@ class User
             return $e->getMessage();
         }
     }
-
+    /**
+     * Deletes a user
+     *
+     * @param  Integer $id User id
+     * @return mixed     Boolean or String based on records deleted or error
+     */
     public function delete($id)
     {
         try {
@@ -237,14 +341,17 @@ class User
             $sql->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
             $sql->bindValue(':lmt', (int) $limit, PDO::PARAM_INT);
             $sql->execute();
-            return var_dump($sql->fetchAll(PDO::FETCH_ASSOC)) ;
-
-
+            $result=$sql->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
         } catch (PDOException $e) {
             return false;
         }
     }
-
+    /**
+     * Get last inserted user id
+     *
+     * @return Integer Id of last inserted user
+     */
     public function getLastId()
     {
         return $this->conn->lastInsertId();
