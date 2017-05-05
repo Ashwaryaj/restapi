@@ -59,21 +59,21 @@ class UserController
      * @param  Integer $id     User id
      * @return boolean        Find method of user model
      */
-    public function find($action, $id)
+    public function find()
     {
-        return self::$model->find($_POST);
+        return self::$model->find($_GET);
     }
-    /**
-     * Calls delete method of User modal to findAll users
+/*    *
+     * Calls findAll method of User modal to findAll users
      *
      * @param  String  $action    Signifies what action to perform on User
      * @param  Integer $limit     Number of users per page
      * @param  Integer $offset    Starting user of a page
      * @param  String  $firstName First name of user
      * @return boolean        FindAll method of user model
-     */
+
     public function findAll($action, $limit, $offset, $firstName)
     {
         return self::$model->findAll($limit, $offset, $firstName);
-    }
+    }*/
 }

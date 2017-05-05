@@ -198,19 +198,20 @@ class UserTest extends TestCase
     }
     public function testFindAllByOffsetFloat()
     {
-        $this->assertFalse($this->user->findAll(5, 7.9876, 'Ben'));
+        $this->assertEmpty($this->user->findAll(5, 7.9876, 'Ben'));
     }
-    public function testFindAllByOffsetNotExists()
-    {
-        $this->assertFalse($this->user->findAll(5, '*', 'Ben'));
-    }
+
     public function testFindAllByLimitNegative()
     {
         $this->assertFalse($this->user->findAll(-5, 0, 'Ben'));
     }
+    public function testFindAllByOffsetNotExists()
+    {
+        $this->assertNotEmpty($this->user->findAll(5, '?', 'Ben'));
+    }
     public function testFindAllByLimitFloat()
     {
-        $this->assertEmpty($this->user->findAll(5.078, 0, 'Ben'));
+        $this->assertNotEmpty($this->user->findAll(5.078, 0, 'Ben'));
     }
     public function testFindAllByLimitInvalid()
     {

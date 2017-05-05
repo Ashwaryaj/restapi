@@ -1,0 +1,370 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "rest",
+    "description": "Implementation of REST API for user CRUD operations.",
+    "license": {
+      "name": "MIT",
+      "url": "http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT"
+    }
+  },
+  "host": "localhost",
+  "basePath": "/restapi/sourcecode",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/index.php": {
+      "get": {
+        "description": "TODO: Add Description",
+        "summary": "http://localhost/restapi/sourcecode/index.php?action=user/find&id=2",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "http://localhost/restapi/sourcecode/index.php?action=user/find&id=2",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "GET",
+              "uri": "/index.php?action=user/find&id=4"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "http://localhost/restapi/sourcecode/index.php?action=user/find&id=2",
+            "x-testDescription": "TODO: Add Description"
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      },
+      "put": {
+        "description": "TODO: Add Description",
+        "summary": "http://localhost/restapi/sourcecode/index.php?action=user/delete",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "http://localhost/restapi/sourcecode/index.php?action=user/delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Http:~1~1localhost~1restapi~1sourcecode~1index.php?action=user~1deleterequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "PUT",
+              "uri": "/index.php?action=user/create",
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "body": "{\"id\":\"2\"}"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "http://localhost/restapi/sourcecode/index.php?action=user/delete",
+            "x-testDescription": "TODO: Add Description"
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      },
+      "post": {
+        "description": "TODO: Add Description",
+        "summary": "http://localhost/restapi/sourcecode/index.php?action=user/create",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "http://localhost/restapi/sourcecode/index.php?action=user/create",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Http:~1~1localhost~1restapi~1sourcecode~1index.php?action=user~1createrequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "POST",
+              "uri": "/index.php?action=user/create",
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "body": "{\"firstName\":\"nen\",\"middleName\":\"Ten\",\"lastName\":\"Tom\",\"email\":\"ben@ben.com\",\"age\":\"90\",\"phoneNumber\":\"9876543212\",\"address\":\"delhi\",\"created_at\":\"2017-05-04 12:26:09\",\"updated_at\":\"2017-05-04 12:26:09\"}"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "http://localhost/restapi/sourcecode/index.php?action=user/create",
+            "x-testDescription": "TODO: Add Description"
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      },
+      "delete": {
+        "description": "TODO: Add Description",
+        "summary": "http://localhost/restapi/sourcecode/index.php?action=user/update",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "http://localhost/restapi/sourcecode/index.php?action=user/update",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Http:~1~1localhost~1restapi~1sourcecode~1index.php?action=user~1updaterequest"
+            }
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "DELETE",
+              "uri": "/index.php?action=user/delete",
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "body": "{\"id\":\"3\"}"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "http://localhost/restapi/sourcecode/index.php?action=user/update",
+            "x-testDescription": "TODO: Add Description"
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Http://localhost/restapi/sourcecode/index.php?action=user/updaterequest": {
+      "title": "http://localhost/restapi/sourcecode/index.php?action=user/updateRequest",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Http://localhost/restapi/sourcecode/index.php?action=user/createrequest": {
+      "title": "http://localhost/restapi/sourcecode/index.php?action=user/createRequest",
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "description": "",
+          "type": "string"
+        },
+        "middleName": {
+          "description": "",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "",
+          "type": "string"
+        },
+        "email": {
+          "description": "",
+          "type": "string"
+        },
+        "age": {
+          "description": "",
+          "type": "string"
+        },
+        "phoneNumber": {
+          "description": "",
+          "type": "string"
+        },
+        "address": {
+          "description": "",
+          "type": "string"
+        },
+        "created_at": {
+          "description": "",
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "required": [
+        "firstName",
+        "middleName",
+        "lastName",
+        "email",
+        "age",
+        "phoneNumber",
+        "address",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "Http://localhost/restapi/sourcecode/index.php?action=user/deleterequest": {
+      "title": "http://localhost/restapi/sourcecode/index.php?action=user/deleteRequest",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

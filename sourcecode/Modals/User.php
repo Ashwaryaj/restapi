@@ -144,7 +144,6 @@ class User
     public function validate($userDetails = array())
     {
         $errors = [];
-
         foreach ($this->rules as $rule => $fields) {
             foreach ($fields as $field) {
                 if (!$this->$rule($field, $userDetails)) {
@@ -210,11 +209,9 @@ class User
     public function lengthCheck($field, $data)
     {
         $inputKey = (array_keys($field))[0];
-
         if (isset($data[$inputKey])) {
             return (strlen($data[$inputKey]) >= $field[$inputKey]['min']);
         }
-
         return true;
     }
     /**
@@ -232,7 +229,7 @@ class User
      * @param  array $userDetails Fields  related to user
      * @return mixed             Boolean or error message
      */
-    public function save($userDetails = array())
+    public function save($userDetails)
     {
         try {
             if (!array_key_exists('id', $userDetails)) {
@@ -240,51 +237,59 @@ class User
                     "INSERT INTO users (first_name, middle_name, last_name, email, age, phone_no, address)
                 VALUES (:firstName, :middleName, :lastName, :email, :age, :phoneNumber, :address)"
                 );
-                $sql->bindParam(':firstName', $userDetails['firstName']);
-                $sql->bindParam(':middleName', $userDetails['middleName']);
-                $sql->bindParam(':lastName', $userDetails['lastName']);
-                $sql->bindParam('email', $userDetails['email']);
-                $sql->bindParam(':age', $userDetails['age']);
-                $sql->bindParam('phoneNumber', $userDetails['phoneNumber']);
-                $sql->bindParam('address', $userDetails['address']);
-                $sql->execute();
-                return $this->conn->lastInsertId();
             } else {
                 $sql= $this->conn->prepare("update users set first_name=:firstName, middle_name=:middleName, last_name=:lastName, email=:email, age=:age, phone_no=:phoneNumber, address=:address where id=:id");
                 $sql->bindParam(':id', $userDetails['id']);
-                $sql->bindParam(':firstName', $userDetails['firstName']);
-                $sql->bindParam(':middleName', $userDetails['middleName']);
-                $sql->bindParam(':lastName', $userDetails['lastName']);
-                $sql->bindParam('email', $userDetails['email']);
-                $sql->bindParam(':age', $userDetails['age']);
-                $sql->bindParam('phoneNumber', $userDetails['phoneNumber']);
-                $sql->bindParam('address', $userDetails['address']);
-                $sql->execute();
-                $count= $sql->rowCount();
-
-                if (0==$count) {
+            }
+            $sql->bindParam(':firstName', $userDetails['firstName']);
+            $sql->bindParam(':middleName', $userDetails['middleName']);
+            $sql->bindParam(':lastName', $userDetails['lastName']);
+            $sql->bindParam('email', $userDetails['email']);
+            $sql->bindParam(':age', $userDetails['age']);
+            $sql->bindParam('phoneNumber', $userDetails['phoneNumber']);
+            $sql->bindParam('address', $userDetails['address']);
+            $sql->execute($userDetails);
+            if (0==$sql->rowCount()) {
                     return false;
-                } else {
+            } else {
                     return true;
-                }
             }
         } catch (PDOException $e) {
             return  $e->getMessage();
         }
     }
+
     /**
      * Method for finding a user
      *
      * @param  Integer $id id of user
      * @return mixed     Boolean or String based on records fetched or error
      */
-    public function find($id)
+    public function find($details)
     {
         try {
-            $sql=$this->conn->prepare("select * from users where id=:id");
-            $sql->bindParam(':id', $id);
+            if (array_key_exists('id', $details)) {
+                $sql=$this->conn->prepare("select * from users where id=:id");
+                $sql->bindParam(':id', $details['id']);
+            } else if (1==count($details) && null!=$details['action']) {
+                $sql=$this->conn->prepare("select * from users");
+            } else if (!array_key_exists('offset', $details) && null!=$details['limit'] && 2==count($details)) {
+                $offset=0;
+                $sql=$this->conn->prepare("SELECT * from users  LIMIT  :offset, :lmt");
+                $sql->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+                $sql->bindValue(':lmt', (int)$details['limit'], PDO::PARAM_INT);
+            } else if (!array_key_exists('limit', $details) && null!=$details['offset'] && 2==count($details)) {
+                $limit=10;
+                $sql=$this->conn->prepare("SELECT * from users  LIMIT  :offset, :lmt");
+                $sql->bindValue(':lmt', (int)$limit, PDO::PARAM_INT);
+                $sql->bindValue(':offset', (int)$details['offset'], PDO::PARAM_INT);
+            } else if (array_key_exists('limit', $details) && array_key_exists('offset', $details) && 3==count($details)) {
+                $sql=$this->conn->prepare("SELECT * from users  LIMIT  :offset, :lmt");
+                $sql->bindValue(':lmt', (int)$details['limit'], PDO::PARAM_INT);
+                $sql->bindValue(':offset', (int)$details['offset'], PDO::PARAM_INT);
+            }
             $sql->execute();
-            $result = $sql->fetch(PDO::FETCH_ASSOC);
+            $result = $sql->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         } catch (PDOException $e) {
             return $e->getMessage();
@@ -317,28 +322,12 @@ class User
             $sql->bindParam(':id', $id);
             $sql->execute();
             $count= $sql->rowCount();
-
             if (0==$count) {
                 return false;
             }
             return true;
         } catch (PDOException $e) {
             return $e->getMessage();
-        }
-    }
-
-    public function findAll($limit = 10, $offset = 0, $firstName = 'Ben')
-    {
-        try {
-            $sql=$this->conn->prepare("SELECT * from users WHERE first_name=:firstName LIMIT  :offset, :lmt");
-            $sql->bindParam(':firstName', $firstName);
-            $sql->bindValue(':offset', $offset, PDO::PARAM_INT);
-            $sql->bindValue(':lmt', $limit, PDO::PARAM_INT);
-            $sql->execute();
-            $result=$sql->fetchAll(PDO::FETCH_ASSOC);
-            return $result;
-        } catch (PDOException $e) {
-            return false;
         }
     }
     /**
